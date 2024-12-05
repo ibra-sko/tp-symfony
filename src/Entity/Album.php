@@ -3,34 +3,32 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Artist;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\AlbumRepository")
- */
+#[ORM\Entity(repositoryClass: 'App\Repository\AlbumRepository')]
+#[UniqueEntity(fields: ['title'], message: 'The album title must be unique')]
 class Album
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 255)]
+    private ?string $title = null;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $releaseDate;
+    #[ORM\Column(type: 'date')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'datetime')]
+    private ?\DateTimeInterface $releaseDate = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Artist", inversedBy="albums")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $artist;
+    #[ORM\ManyToOne(targetEntity: Artist::class, inversedBy: 'albums')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Artist $artist = null;
 
     public function getId(): ?int
     {
@@ -72,5 +70,10 @@ class Album
 
         return $this;
     }
-}
 
+    // Pour afficher l'album dans un format lisible
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+}

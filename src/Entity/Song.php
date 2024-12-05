@@ -3,38 +3,40 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use App\Entity\Album;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\SongRepository")
- * @ApiResource
- * @ApiFilter(RangeFilter::class, properties={"length"})
- */
+#[ORM\Entity(repositoryClass: 'App\Repository\SongRepository')]
+#[ApiResource]
+#[ApiFilter(RangeFilter::class, properties: ['length'])]
 class Song
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 255)]
+    private ?string $title = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $length;
+    #[ORM\Column(type: 'integer')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'integer')]
+    #[Assert\GreaterThan(0)]
+    private ?int $length = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Album", inversedBy="songs")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $album;
+    #[ORM\ManyToOne(targetEntity: Album::class, inversedBy: 'songs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Album $album = null;
+
+    public function __construct()
+    {
+        // Optionally, you can initialize any properties here.
+    }
 
     public function getId(): ?int
     {
@@ -75,5 +77,11 @@ class Song
         $this->album = $album;
 
         return $this;
+    }
+
+    // Optionally, a __toString() method can be added for better readability
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }
