@@ -35,7 +35,6 @@ class Song
 
     public function __construct()
     {
-        // Optionally, you can initialize any properties here.
     }
 
     public function getId(): ?int

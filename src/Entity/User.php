@@ -87,20 +87,18 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * This method is required by UserInterface and returns the identifier of the user
+     * (usually email or username). We use the email here.
+     *
+     * @return string
+     */
     public function getUserIdentifier(): string
     {
         return $this->email;
     }
 
-
-    public function getSalt(): ?string
-    {
-        return null;
-    }
-
-
     public function eraseCredentials(): void
     {
-        // Clear any temporary sensitive data, if any
     }
 }

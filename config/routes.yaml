@@ -1,5 +1,5 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+# config/routes.yaml
+artist_album_song:
+    path: /artist/{artistId}/album/{albumId}/song/{songId}
+    controller: App\Controller\ArtistAlbumSongController::getSong
+    methods: [GET]
